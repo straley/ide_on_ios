@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>IDE on iOS</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"> 
+<style type="text/css" media="screen">
+    body { 
+        height: 100vh; 
+        padding: 0;
+        margin: 0; 
+        background-color: #000;
+        color: #ccc;
+    }
+    #content { height: 100%; }
+    #spacer { height: 1px; }
+
+    #sidebar {
+        position: absolute;
+        top: 0;
+        right: 200px;
+        bottom: 0;
+        left: 0;
+    }
+    
+    #editor { 
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 200px;
+    }
+</style>
+</head>
+<body>
+
+<div id="content">
+    <div id="sidebar"></div>
+    <div id="editor"></div>
+</div>
+<div id="spacer"></div>
+<input type="text" id="searchbox"/>
+<input type="button" id="searchbox2"/>
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.7/ace.js" type="text/javascript" charset="utf-8"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=" crossorigin="anonymous"></script>
+  
+<script>
+    /* globals ace, $ */
+    
+    var editor = ace.edit("editor");
+    editor.setTheme("ace/theme/monokai");
+    editor.getSession().setMode("ace/mode/javascript");
+    
+    function load( filename ) {
+        $.getJSON( "/api/load/" + filename, {}, function( response ) {
+            editor.session.setValue( response.contents );
+        } );
+    } 
+
+    load("tsconfig.json");
+    
+    function blockNativeFind() {
+        event.preventDefault();
+        $("#searchbox").show().select().focus();
+        setTimeout(function(){
+            $("#searchbox2").show().select().focus();
+        }, 10);
+        return;
+    }
+
+    $( document ).ready( function () {
+        window.onkeydown = function( event ) {
+            if ( (event.ctrlKey || event.metaKey ) && event.keyCode == 70 ) {
+                blockNativeFind();
+            } 
+        };
+    });    
+
+    
+    // editor.commands.bindKeys({ "Cmd-F": blockNativeFind });
+    editor.onkeydown = function( event ) {
+        console.log("1");
+        if ( (event.ctrlKey || event.metaKey ) && event.keyCode == 70 ) {
+            blockNativeFind();
+        } 
+    };
+    
+    /*
+    const keyboardHandler = editor.getKeyboardHandler();
+
+    keyboardHandler.commands.copy.bindKeys = {
+        "win": "Command-C|Ctrl-C",
+        "mac": "Command-C|Ctrl-C"
+    };
+
+    keyboardHandler.commands.paste.bindKeys = {
+        "win": "Command-V|Ctrl-V",
+        "mac": "Command-V|Ctrl-V"
+    };
+
+    keyboardHandler.commands.gotopagedown.bindKeys = {
+        "win" : "",
+        "mac" : "PageDown|Ctrl-Down"
+    };
+
+    editor.setKeyboardHandler( keyboardHandler );
+    */
+    
+    editor.commands.bindKey( "ctrl-c", {
+      "name": "overridecopy",
+      "readOnly": true,
+    } );
+
+    editor.commands.bindKey( "ctrl-v", {
+      "name": "overridepaste",
+      "readOnly": false,
+    } );
+
+    var clipboard = null;
+    editor.commands.commandKeyBinding[ "ctrl-c" ].exec = function( e ) { 
+        clipboard = Object.assign( editor.getSession() );
+    };
+
+    editor.commands.commandKeyBinding[ "ctrl-v" ].exec = function( e ) { 
+        console.log( "pasting", clipboard );
+    };
+
+    // editor.session.setValue( JSON.stringify( keyboardHandler , null, 2 ) );
+    
+    editor.on( "copy", function( text ) {
+        $("#sidebar").text( text );
+    } );
+    
+    /*
+    editor.commands.bindKeys({ "Ctrl-C": info });
+    editor.commands.bindKeys({ "Ctrl-V": info });
+    */
+
+</script>
+</body>
+</html>
+
+
+
