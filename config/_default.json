@@ -1,5 +1,5 @@
-const config = {
-  auth: "user:password",
-  path: "/absolute/path/to/files/served"
-};
+{
+  "auth": "user:password",
+  "path": "/absolute/path/to/files/served"
+}
 
