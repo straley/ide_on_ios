@@ -9,7 +9,6 @@ body {
 #content { 
     height: 100%; 
     z-index: 0;
-    opacity: 0.99;
 }
 
 #spacer { height: 1px; }
@@ -17,8 +16,8 @@ body {
 #sidebar {
     position: absolute;
     top: 0;
-    right: 200px;
-    bottom: 200px;
+    right: 0; /* 200px; */
+    bottom: 0; /* 200px; */
     left: 0;
     background-color: #333;
 }
@@ -27,21 +26,22 @@ body {
     position: absolute;
     top: 0;
     right: 0;
-    bottom: 200px;
-    left: 200px;
-    opacity: 0.01;
+    bottom: 0; /* 200px; */
+    left: 0; /* 200px; */
+    opacity: 0;
 }
 
 #editor { 
     position: absolute;
     top: 0;
     right: 0;
-    bottom: 200px;
-    left: 300px;
+    bottom: 0; /* 200px; */
+    left: 0; /* 200px; */
 }
 #console { 
     position: absolute;
-    height: 200px;
+    display: none;
+    height: 0; /* 200px; */
     right: 0;
     bottom: 0;
     left: 0;
@@ -52,7 +52,7 @@ body {
     position: relative;
     overflow-y: scroll;
     overflow-x: wrap;
-    height: 280px;
+    height: 0; /* 180px; */
     width: 100%;
     unicode-bidi: embed;
     font-family: monospace;
