@@ -1,100 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>IDE on iOS</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"> 
-<style type="text/css" media="screen">
-    body { 
-        height: 100vh; 
-        padding: 0;
-        margin: 0; 
-        background-color: #000;
-        color: #ccc;
-    }
-    #content { height: 100%; }
-    #spacer { height: 1px; }
-
-    #sidebar {
-        position: absolute;
-        top: 0;
-        right: 300px;
-        bottom: 300px;
-        left: 0;
-        background-color: #333;
-    }
-    
-    #editor { 
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 300px;
-        left: 300px;
-    }
-    #console { 
-        position: absolute;
-        height: 300px;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        background-color: #666;
-    }
-    #console .output {
-        display: block;
-        position: relative;
-        overflow-y: scroll;
-        overflow-x: wrap;
-        height: 280px;
-        width: 100%;
-        unicode-bidi: embed;
-        font-family: monospace;
-        white-space: pre;
-    }
-    #console .output .log {
-        color: #fff;
-    }
-    #console .output .log:before {
-        content: "  ";
-    }
-    #console .output .info {
-        color: #fff;
-    }
-    #console .output .info:before {
-        content: "  ";
-    }
-    #console .output .debug {
-        color: #99f;
-    }
-    #console .output .debug:before {
-        content: "  ";
-    }
-    #console .output .warn {
-        color: #fff;
-    }
-    #console .output .warn:before {
-        content: "⚠️ ";
-    }
-    #console .output .error {
-        color: #f99;
-    }
-    #console .output .error:before {
-        content: "🛑 ";
-    }
-    #console .immediate {
-        display: block;
-        position: relative;
-        height: 20px;
-        width: 100%;
-    }
-    
-</style>
+    <title>IDE on iOS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"> 
+    <link rel="stylesheet" href="ide-on-ios.css">
 </head>
 <body>
 
 <div id="content">
+    <div id="keycapture"></div>
     <div id="sidebar"></div>
     <div id="editor"></div>
     <div id="console">
-        <div class="output">Hello?</div>
+        <div class="output"></div>
         <div classs="immediate"></div>
     </div>
 </div>
@@ -107,111 +25,7 @@
 <script src="safeJsonStringify.js" type="text/javascript" charset="utf-8"></script>    
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.7/ace.js" type="text/javascript" charset="utf-8"></script>
 <script src="https://code.jquery.com/jquery-3.2.1.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=" crossorigin="anonymous"></script>
-  
-<script>
-    /* globals ace, $ */
-    
-    const clipboard = {text: ""};
-    
-    function console_write(level, args) {
-      const $console_output = $("#console .output");
-      const lines = $console_output.html().split("<br/>");
-      if (lines.length > 100) {
-        lines.pop();
-      }
-      
-      Object.keys( args ).forEach( ( key ) => {
-        if ( !isNaN( parseInt( key ) ) ) {
-          if ( typeof args[key] === "string" ) {
-            lines.push( `<span class="${level}">${ args[ key ] }</span>` );
-          } else {
-            lines.push( `<span class="${level}">${ JSON.stringify( args[ key ] ) }</span>` );
-          }
-        }
-      } );
-      
-      $console_output.html(lines.join("<br/>"));
-      $console_output.scrollTop($console_output.prop("scrollHeight"));
-    }
-    
-    window.console = {
-      log: function(){ return console_write("log", arguments)}, 
-      info: function(){ return console_write("info", arguments)}, 
-      warn: function(){ return console_write("warn", arguments)}, 
-      debug: function(){ return console_write("debug", arguments)}, 
-      error: function(){ return console_write("error", arguments)}, 
-      profile: function(){ return console_write("profile", arguments)}, 
-      timestamp: function(){ return console_write("timestamp", arguments)}, 
-      trace: function(){ return console_write("trace", arguments)}, 
-    };
-    console = window.console;
-    
-    
-    window.addEventListener("error", function (e) {
-      console.error([e.error.message, "from", e.error.stack]);
-    });    
-
-    var editor = ace.edit("editor");
-    editor.blockScrolling = Infinity;
-    editor.setTheme("ace/theme/monokai");
-    editor.getSession().setMode("ace/mode/javascript");
-    
-    function load( filename ) {
-        $.getJSON( "/api/load/" + filename, {}, function( response ) {
-            editor.session.setValue( response.contents );
-        } );
-    } 
-
-    load("tsconfig.json");
-    
-    /*
-    function blockNativeFind() {
-        event.preventDefault();
-        $("#searchbox").show().select().focus();
-        setTimeout(function(){
-            $("#searchbox2").show().select().focus();
-        }, 10);
-        return;
-    }
-
-    $( document ).ready( function () {
-        window.onkeydown = function( event ) {
-            if ( (event.ctrlKey || event.metaKey ) && event.keyCode == 70 ) {
-                blockNativeFind();
-            } 
-        };
-    });    
-    */
-    
-    editor.commands.addCommand({
-      name: "alternateCopy",
-      bindKey: { win: "Option-C", mac: "Option-C" },
-      exec: function() {
-        clipboard.text = editor.getSelectedText();
-      }
-    });     
-
-    editor.commands.addCommand({
-      name: "alternatePaste",
-      bindKey: { win: "Option-V", mac: "Option-V" },
-      exec: function() {
-        const document = editor.getSession().getDocument();
-        const selectionRange = editor.getSelectionRange();
-        document.replace(selectionRange, clipboard.text);
-      }
-    });     
-
-    editor.commands.addCommand({
-      name: "alternatePageDown",
-      bindKey: { win: "Option-Z", mac: "Option-Z" },
-      exec: function() {
-        console.log( "down ");
-      }
-    });     
-
-
-    
-</script>
+<script src="ide-on-ios.js" type="text/javascript" charset="utf-8"></script>    
 </body>
 </html>
 

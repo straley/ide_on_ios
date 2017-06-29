@@ -1,0 +1,96 @@
+body { 
+    height: 100vh; 
+    padding: 0;
+    margin: 0; 
+    background-color: #000;
+    color: #ccc;
+}
+
+#content { 
+    height: 100%; 
+    z-index: 0;
+    opacity: 0.99;
+}
+
+#spacer { height: 1px; }
+
+#sidebar {
+    position: absolute;
+    top: 0;
+    right: 200px;
+    bottom: 200px;
+    left: 0;
+    background-color: #333;
+}
+#keycapture { 
+    z-index: 1;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 200px;
+    left: 200px;
+    opacity: 0.01;
+}
+
+#editor { 
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 200px;
+    left: 300px;
+}
+#console { 
+    position: absolute;
+    height: 200px;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: #666;
+}
+#console .output {
+    display: block;
+    position: relative;
+    overflow-y: scroll;
+    overflow-x: wrap;
+    height: 280px;
+    width: 100%;
+    unicode-bidi: embed;
+    font-family: monospace;
+    white-space: pre-wrap;
+}
+#console .output .log {
+    color: #fff;
+}
+#console .output .log:before {
+    content: "  ";
+}
+#console .output .info {
+    color: #fff;
+}
+#console .output .info:before {
+    content: "  ";
+}
+#console .output .debug {
+    color: #99f;
+}
+#console .output .debug:before {
+    content: "  ";
+}
+#console .output .warn {
+    color: #fff;
+}
+#console .output .warn:before {
+    content: "⚠️ ";
+}
+#console .output .error {
+    color: #f99;
+}
+#console .output .error:before {
+    content: "🛑 ";
+}
+#console .immediate {
+    display: block;
+    position: relative;
+    height: 20px;
+    width: 100%;
+}
