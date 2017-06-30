@@ -1,137 +1,195 @@
-const keyActions = {
-    "CURSOR_MOVE_UP" : () => {
-        selection.clearSelection();
-        selection.moveCursorUp();
-    },
-    "CURSOR_MOVE_DOWN" : () => {
-        selection.clearSelection();
-        selection.moveCursorDown();
-    },
-    "CURSOR_MOVE_LEFT" : () => {
-        selection.clearSelection();
-        selection.moveCursorLeft();
-    },
-    "CURSOR_MOVE_RIGHT" : () => {
-        selection.clearSelection();
-        selection.moveCursorRight();
-    },
-    "CURSOR_SELECT_UP" : () => {
-        selection.selectUp();
-    },
-    "CURSOR_SELECT_DOWN" : () => {
-        selection.selectDown();
-    },
-    "CURSOR_SELECT_LEFT" : () => {
-        selection.selectLeft();
-    },
-    "CURSOR_SELECT_RIGHT" : () => {
-        selection.selectRight();
-    },
-    "CURSOR_MOVE_PAGE_START": () => {
-        selection.moveCursorFileStart();
-    },
-    "CURSOR_MOVE_PAGE_UP": () => {
-        editor.gotoPageUp();
-    },
-    "CURSOR_SELECT_PAGE_START": () => {
-        selection.selectTo( 0, 0 );
-    },
-    "CURSOR_SELECT_PAGE_UP": () => {
-        editor.selectPageUp();
-    },
-    "CURSOR_MOVE_PAGE_END": () => {
-        selection.moveCursorFileEnd();
-    },
-    "CURSOR_MOVE_PAGE_DOWN": () => {
-        editor.gotoPageDown();
-    },
-    "CURSOR_SELECT_PAGE_END": () => {
-        selection.selectTo( doc.getLength() + 1, 0 );
-    },
-    "CURSOR_SELECT_PAGE_DOWN": () => {
-        editor.selectPageDown();
-    },
-    "CURSOR_MOVE_LINE_END": () => {
-        selection.moveCursorLineEnd();
-    },
-    "CURSOR_MOVE_NEXT_WORD": () => {
-        selection.moveCursorLongWordRight();
-    },
-    "CURSOR_SELECT_LINE_END": () => {
-        const cursor = selection.getCursor();
-        const lineLength = doc.getLine( cursor.row ).length;
-        selection.selectTo( cursor.row, lineLength );
-    },
-    "CURSOR_SELECT_NEXT_WORD": () => {
-        const start = selection.getCursor();
-        selection.moveCursorLongWordRight();
-        const end = selection.getCursor();
-        selection.moveCursorTo( start.row, start.column );
-        selection.selectTo( end.row, end.column );
-    },
-    "CURSOR_MOVE_LINE_START": () => {
-        selection.moveCursorLineStart();
-    },
-    "CURSOR_MOVE_PREVIOUS_WORD": () => {
-        selection.moveCursorLongWordLeft();
-    },
-    "CURSOR_SELECT_LINE_START": () => {
-        const cursor = selection.getCursor();
-        selection.selectTo( cursor.row, 0 );
-    },
-    "CURSOR_SELECT_PREVIOUS_WORD": () => {
-        const start = selection.getCursor();
-        selection.moveCursorLongWordLeft();
-        const end = selection.getCursor();
-        selection.moveCursorTo( start.row, start.column );
-        selection.selectTo( end.row, end.column );
-    },
-    "SELECT_ALL": () => {
-        selection.selectAll();
-    },
-    "COPY": () => {
-        clipboard.text = editor.getSelectedText();
-    },
-    "PASTE": () => {
-        doc.replace( selection.getRange(), clipboard.text );
-    },
-    "CUT": () => {
-        clipboard.text = editor.getSelectedText();
-        doc.replace( selection.getRange(), "" );
-    },
-    "BACKSPACE": () => {
-        if ( selection.isEmpty() ) {
-            selection.selectLeft();
-        }
-        doc.replace( selection.getRange(), "" );
-    },
-    "ENTER": () => {
-        editor.insert( "\n" );
-    },
-    "TAB": () => {
-        if ( !selection.isMultiLine() ) {
-            editor.insert( "\t" );
-        } else {
-            editor.blockIndent();
-        }
-    },
-    "UNTAB": () => {
-        editor.blockOutdent();
-    },
-    "OUTPUT": () => {
-        doc.replace( selection.getRange(), keyboard.key );
-    },
-    "FOLD": () => {
-        editor.session.toggleFold(true);
-    },
-    "UNFOLD": () => {
-        editor.session.toggleFold(false);
-    },
-    "UNDO": () => {
-        editor.undo();
-    },
-    "REDO": () => {
-        editor.redo();
+/* globals $ */
+
+class KeyActions {
+    constructor( ide ) {
+        this.ide = ide;
+        
+        this.actions = { 
+            "CURSOR_MOVE_UP" : () => {
+                this.ide.selection.clearSelection();
+                this.ide.selection.moveCursorUp();
+            },
+            "CURSOR_MOVE_DOWN" : () => {
+                this.ide.selection.clearSelection();
+                this.ide.selection.moveCursorDown();
+            },
+            "CURSOR_MOVE_LEFT" : () => {
+                this.ide.selection.clearSelection();
+                this.ide.selection.moveCursorLeft();
+            },
+            "CURSOR_MOVE_RIGHT" : () => {
+                this.ide.selection.clearSelection();
+                this.ide.selection.moveCursorRight();
+            },
+            "CURSOR_SELECT_UP" : () => {
+                this.ide.selection.selectUp();
+            },
+            "CURSOR_SELECT_DOWN" : () => {
+                this.ide.selection.selectDown();
+            },
+            "CURSOR_SELECT_LEFT" : () => {
+                this.ide.selection.selectLeft();
+            },
+            "CURSOR_SELECT_RIGHT" : () => {
+                this.ide.selection.selectRight();
+            },
+            "CURSOR_MOVE_PAGE_START": () => {
+                this.ide.selection.moveCursorFileStart();
+            },
+            "CURSOR_MOVE_PAGE_UP": () => {
+                this.ide.editor.gotoPageUp();
+            },
+            "CURSOR_SELECT_PAGE_START": () => {
+                this.ide.selection.selectTo( 0, 0 );
+            },
+            "CURSOR_SELECT_PAGE_UP": () => {
+                this.ide.editor.selectPageUp();
+            },
+            "CURSOR_MOVE_PAGE_END": () => {
+                this.ide.selection.moveCursorFileEnd();
+            },
+            "CURSOR_MOVE_PAGE_DOWN": () => {
+                this.ide.editor.gotoPageDown();
+            },
+            "CURSOR_SELECT_PAGE_END": () => {
+                this.ide.selection.selectTo( this.ide.document.getLength() + 1, 0 );
+            },
+            "CURSOR_SELECT_PAGE_DOWN": () => {
+                this.ide.editor.selectPageDown();
+            },
+            "CURSOR_MOVE_LINE_END": () => {
+                this.ide.selection.moveCursorLineEnd();
+            },
+            "CURSOR_MOVE_NEXT_WORD": () => {
+                this.ide.selection.moveCursorLongWordRight();
+            },
+            "CURSOR_SELECT_LINE_END": () => {
+                const cursor = this.ide.selection.getCursor();
+                const lineLength = this.ide.document.getLine( cursor.row ).length;
+                this.ide.selection.selectTo( cursor.row, lineLength );
+            },
+            "CURSOR_SELECT_NEXT_WORD": () => {
+                const start = this.ide.selection.getCursor();
+                this.ide.selection.moveCursorLongWordRight();
+                const end = this.ide.selection.getCursor();
+                this.ide.selection.moveCursorTo( start.row, start.column );
+                this.ide.selection.selectTo( end.row, end.column );
+            },
+            "CURSOR_MOVE_LINE_START": () => {
+                this.ide.selection.moveCursorLineStart();
+            },
+            "CURSOR_MOVE_PREVIOUS_WORD": () => {
+                this.ide.selection.moveCursorLongWordLeft();
+            },
+            "CURSOR_SELECT_LINE_START": () => {
+                const cursor = this.ide.selection.getCursor();
+                this.ide.selection.selectTo( cursor.row, 0 );
+            },
+            "CURSOR_SELECT_PREVIOUS_WORD": () => {
+                const start = this.ide.selection.getCursor();
+                this.ide.selection.moveCursorLongWordLeft();
+                const end = this.ide.selection.getCursor();
+                this.ide.selection.moveCursorTo( start.row, start.column );
+                this.ide.selection.selectTo( end.row, end.column );
+            },
+            "SELECT_ALL": () => {
+                this.ide.selection.selectAll();
+            },
+            "COPY": () => {
+                this.ide.clipboard.text = this.ide.editor.getSelectedText();
+            },
+            "PASTE": () => {
+                this.ide.document.replace( this.ide.selection.getRange(), this.ide.clipboard.text );
+            },
+            "CUT": () => {
+                this.ide.clipboard.text = this.ide.editor.getSelectedText();
+                this.ide.document.replace( this.ide.selection.getRange(), "" );
+            },
+            "BACKSPACE": () => {
+                if ( this.ide.selection.isEmpty() ) {
+                    this.ide.selection.selectLeft();
+                }
+                this.ide.document.replace( this.ide.selection.getRange(), "" );
+            },
+            "ENTER": () => {
+                this.ide.editor.insert( "\n" );
+            },
+            "TAB": () => {
+                if ( !this.ide.selection.isMultiLine() ) {
+                    this.ide.editor.insert( "\t" );
+                } else {
+                    this.ide.editor.blockIndent();
+                }
+            },
+            "UNTAB": () => {
+                this.ide.editor.blockOutdent();
+            },
+            "OUTPUT": () => {
+                this.ide.document.replace( this.ide.selection.getRange(), this.ide.events.keyboard.key );
+            },
+            "TOGGLE_FOLD_PARETHESES": () => {
+                this.toggleFold( /[\(\)](?=[^\(\)]*$)/ );
+            },
+            "TOGGLE_FOLD_BRACES": () => {
+                this.toggleFold( /[\{\}](?=[^\{\}]*$)/ );
+            },
+            "TOGGLE_FOLD_BRACKETS": () => {
+                this.toggleFold( /[\[\]](?=[^\[\]]*$)/ );
+            },
+            "UNDO": () => {
+                this.ide.editor.undo();
+            },
+            "REDO": () => {
+                this.ide.editor.redo();
+            },
+            "FIND": () => {
+                // hacking it here... 
+                
+                $( "#dock-bottom" ).height( 300 );
+
+                const orig_id  = $("#searchbox").children().first().attr("id");
+                const new_id = orig_id.slice(0, orig_id.lastIndexOf("-")) + "-" + (parseInt(orig_id.slice(orig_id.lastIndexOf("-")+1)) + 1);
+                
+                console.log( orig_id, new_id );
+                
+                //if ($("#search-input").is(":focus")) {
+                    const search_panel = $("#searchbox");
+                    $(`#${orig_id}`).remove();
+                    $( `<input id="${new_id}" type="text" value="${new_id}" />` ).appendTo( search_panel );
+                //}
+
+                $( `#${new_id}` ).focus();
+                $( "#editor-container" ).css( { height: `calc( 100% - ${ 300 }px )` }) ;
+                $( "#editor" ).css( { height: `calc( 100% - ${ 300 }px )` }) ;
+                this.ide.editor.resize( true );
+                this.ide.events.newKey();
+            },
+            "ESCAPE": () => {
+                $( "#dock-bottom" ).height( 0 );
+                $( "#editor-container" ).css( { height: `calc( 100% - ${ 0 }px )` }) ;
+                $( "#editor" ).css( { height: `calc( 100% - ${ 0 }px )` }) ;
+                this.ide.editor.resize( true );
+                this.ide.events.newKey();
+            }
+        };
     }
-};
+    
+    toggleFold( regexp=/[\(\[\{](?=[^\(\[\{]*$)/ ) {
+        const range = this.ide.selection.getRange();
+        if ( range.isEmpty() ) {
+            const cursor = this.ide.selection.getCursor();
+            const line = this.ide.document.getLine( cursor.row );
+            const pos = line.search( regexp ); // get last in row
+            if ( pos ) {
+                this.ide.selection.moveCursorTo( cursor.row, pos, false );
+            }
+            this.ide.session.toggleFold( true );
+            this.ide.selection.moveCursorTo( cursor.row, cursor.column, false );
+        } else {
+            this.ide.session.toggleFold( true );
+        }
+    }
+    
+}
+
 

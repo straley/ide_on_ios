@@ -1,36 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <title>IDE on iOS</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"> 
-    <link rel="stylesheet" href="ide-on-ios.css">
-</head>
-<body>
+    <head>
+        <title>IDE on iOS</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"> 
+        <link rel="stylesheet" href="ide-on-ios.css">
+    </head>
+    <body>
+        <div id="content">
+            <div id="editor-container">
+                <div id="keycapture">
+                    <div id="momentum"></div></div>
+                </div>
+                <div id="editor"></div>
+            </div>
+            <div id="sidebar"></div>
+            <div id="dock-bottom"></div>
+        </div>
+        <div id="spacer"></div>
 
-<div id="content">
-    <div id="keycapture"></div>
-    <div id="sidebar"></div>
-    <div id="editor"></div>
-    <div id="console">
-        <div class="output"></div>
-        <div classs="immediate"></div>
-    </div>
-</div>
-<div id="spacer"></div>
-<!--
-<input type="text" id="searchbox"/>
-<input type="button" id="searchbox2"/>
--->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.7/ace.js" type="text/javascript" charset="utf-8"></script>
+        <script src="https://code.jquery.com/jquery-3.2.1.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=" crossorigin="anonymous"></script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.7/ace.js" type="text/javascript" charset="utf-8"></script>
-<script src="https://code.jquery.com/jquery-3.2.1.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=" crossorigin="anonymous"></script>
-
-<!-- <script src="safeJsonStringify.js" type="text/javascript" charset="utf-8"></script> -->
-
-<script src="key-mapping.js" type="text/javascript" charset="utf-8"></script>    
-<script src="key-actions.js" type="text/javascript" charset="utf-8"></script>    
-<script src="ide-on-ios.js" type="text/javascript" charset="utf-8"></script>    
-</body>
+        <script src="key-mapping.js" type="text/javascript" charset="utf-8"></script>    
+        <script src="key-actions.js" type="text/javascript" charset="utf-8"></script>    
+        <script src="events.js" type="text/javascript" charset="utf-8"></script>    
+        <script src="Panel.js" type="text/javascript" charset="utf-8"></script>    
+        <script src="PanelManager.js" type="text/javascript" charset="utf-8"></script>    
+        
+        <script src="ide.js" type="text/javascript" charset="utf-8"></script>    
+        
+    </body>
 </html>
 
 
