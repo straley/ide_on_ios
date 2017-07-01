@@ -3,14 +3,15 @@
 // const config = require("ace/config");
 
 class IDE {
-    constructor( editor ) {
+    constructor( id ) {
+        this.id = id; 
         this.clipboard = {text: ""};
-        this.editor = editor;
+        this.editor = ace.edit( id );
         this.session = this.editor.getSession();
         this.document = this.session.getDocument();
         this.selection = this.editor.getSelection();
         this.renderer = this.editor.renderer;
-        this.events = new Events( this );
+        this.events = new Events( this, id );
         this.keyActions = new KeyActions( this );
         this.keyMappings = new KeyMappings( this );
         this.undoManager = this.session.getUndoManager();
@@ -36,7 +37,7 @@ class IDE {
     
 }
 
-const ide = new IDE( ace.edit( "editor" ) );
+const ide = new IDE( "editor" );
 
 // some default settings for now, move these to a config
 ide.editor.$blockScrolling = Infinity;

@@ -1,15 +1,24 @@
 /* globals $ */
 
 class Events {
-    constructor( ide ) {
+    constructor( ide, id ) {
         this.ide = ide;
-        this.keyboard = { newKey: true, key: null, action: null, repeatDelay: null, repeatInterval: null, aux: null };
+        this.keyboard = { newKey: true, key: null, action: null, repeatDelay: null, repeatInterval: null, aux: null, target: null };
         $( window ).keyup( this.newKey.bind( this ) );        
         $( window ).keydown( this.keyDown.bind( this ) );
         $( "#keycapture" ).click( this.clickCapture.bind( this ) );
         $( "#keycapture" ).mousemove( this.mousemoveCapture.bind( this ) );
         this.startMomentumMonitor();
         this.isSelectingWithMouse = false;
+        if ( id ) {
+            this.setTarget( id );
+        }
+    }
+    
+    setTarget( target_id ) {
+        if ( $( `#${ target_id }` ) ) {
+            this.keyboard.target = target_id;
+        }
     }
     
     newKey() {
@@ -60,14 +69,14 @@ class Events {
         }
         
         if( this.keyboard.action && this.keyboard.newKey ) {
-            this.keyboard.action();
+            this.keyboard.action( e );
             this.ide.renderer.scrollCursorIntoView();
-            this.keyboard.repeatDelay = setTimeout(()=>{
-                this.keyboard.repeatInterval = setInterval(()=>{
-                    this.keyboard.action();
+            this.keyboard.repeatDelay = setTimeout( () => {
+                this.keyboard.repeatInterval = setInterval( () => {
+                    this.keyboard.action( e );
                     this.ide.renderer.scrollCursorIntoView();
-                }, 100); 
-            }, 500);
+                }, 100 ); 
+            }, 500 );
             this.keyboard.newKey = false;
         }
         

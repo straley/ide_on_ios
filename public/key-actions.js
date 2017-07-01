@@ -1,4 +1,4 @@
-/* globals $ */
+/* globals $, UI */
 
 class KeyActions {
     constructor( ide ) {
@@ -124,8 +124,12 @@ class KeyActions {
             "UNTAB": () => {
                 this.ide.editor.blockOutdent();
             },
-            "OUTPUT": () => {
-                this.ide.document.replace( this.ide.selection.getRange(), this.ide.events.keyboard.key );
+            "OUTPUT": ( e ) => {
+                if ( this.ide.events.keyboard.target === this.ide.id ) {
+                    this.ide.document.replace( this.ide.selection.getRange(), this.ide.events.keyboard.key );
+                } else {
+                    $( `#${this.ide.events.keyboard.target}` ).trigger( Object.assign( $.Event( "keydown" ), { which: e.which } ) );
+                }
             },
             "TOGGLE_FOLD_PARETHESES": () => {
                 this.toggleFold( /[\(\)](?=[^\(\)]*$)/ );
@@ -146,23 +150,36 @@ class KeyActions {
                 // hacking it here... 
                 
                 $( "#dock-bottom" ).height( 300 );
-
-                const orig_id  = $("#searchbox").children().first().attr("id");
-                const new_id = orig_id.slice(0, orig_id.lastIndexOf("-")) + "-" + (parseInt(orig_id.slice(orig_id.lastIndexOf("-")+1)) + 1);
                 
-                console.log( orig_id, new_id );
+                // todo: this should all be handled by panel, so we're not always recreating this
+                const $search_panel = $("#searchbox");
+                const orig_id  = $search_panel.children().first().attr( "id" );
+                if ( orig_id ) {
+                    $( `#${orig_id}` ).remove();
+                }
+                const safetext = new UI.SafeTextInput( this.ide, $search_panel );
+                // const new_id = safetext.id;
+                safetext.focus();
+                this.ide.events.newKey();
                 
-                //if ($("#search-input").is(":focus")) {
-                    const search_panel = $("#searchbox");
-                    $(`#${orig_id}`).remove();
-                    $( `<input id="${new_id}" type="text" value="${new_id}" />` ).appendTo( search_panel );
-                //}
+                /*
+                const orig_id  = $( "#searchbox" ).children().first().attr( "id" );
+                const new_id = orig_id.slice( 0, orig_id.lastIndexOf( "-" ) ) + "-" + ( parseInt( orig_id.slice( orig_id.lastIndexOf( "-" ) + 1 ), 10 ) + 1 );
+                $( `#${orig_id}` ).remove();
+                $( `<input id="${ new_id }" type="text" value="${ new_id }" />` ).appendTo( search_panel );
+                setTimeout( () => {
+                    // do this to lose focus from the input so ios doesn't pop-up the built-in search box on subsequent finds
+                    $( `#${ new_id }` ).remove();
+                    $( `<input id="${ new_id }" type="text" value="${ new_id }" />` ).appendTo( search_panel );
+                    
+                }, 10 );
 
-                $( `#${new_id}` ).focus();
+                $( `#${ new_id }` ).focus();
                 $( "#editor-container" ).css( { height: `calc( 100% - ${ 300 }px )` }) ;
                 $( "#editor" ).css( { height: `calc( 100% - ${ 300 }px )` }) ;
                 this.ide.editor.resize( true );
                 this.ide.events.newKey();
+                */
             },
             "ESCAPE": () => {
                 $( "#dock-bottom" ).height( 0 );

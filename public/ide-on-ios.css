@@ -81,3 +81,14 @@ body {
 }
 */
 
+
+.safetext {
+    width: 200px;
+    height: 20px;
+    border: 1px solid #6f6;
+}
+
+.safetext-overlay {
+    display: block;
+    border: 1px solid #f00;
+}
