@@ -83,12 +83,17 @@ body {
 
 
 .safetext {
+    padding: 2px;
+    margin: 4px;
     width: 200px;
-    height: 20px;
-    border: 1px solid #6f6;
+    height: 24px;
 }
 
 .safetext-overlay {
     display: block;
-    border: 1px solid #f00;
+}
+
+.safetext-input {
+    position: absolute;
+    left: -9999px;
 }

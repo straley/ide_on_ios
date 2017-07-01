@@ -128,7 +128,7 @@ class KeyActions {
                 if ( this.ide.events.keyboard.target === this.ide.id ) {
                     this.ide.document.replace( this.ide.selection.getRange(), this.ide.events.keyboard.key );
                 } else {
-                    $( `#${this.ide.events.keyboard.target}` ).trigger( Object.assign( $.Event( "keydown" ), { which: e.which } ) );
+                    $( `#${this.ide.events.keyboard.target}` ).trigger( Object.assign( $.Event( "keypress" ), { key: this.ide.events.keyboard.key } ) );
                 }
             },
             "TOGGLE_FOLD_PARETHESES": () => {
@@ -149,7 +149,7 @@ class KeyActions {
             "FIND": () => {
                 // hacking it here... 
                 
-                $( "#dock-bottom" ).height( 300 );
+                $( "#dock-bottom" ).height( 40 );
                 
                 // todo: this should all be handled by panel, so we're not always recreating this
                 const $search_panel = $("#searchbox");

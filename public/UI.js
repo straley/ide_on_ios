@@ -28,7 +28,7 @@ UI.SafeTextInput = UI.prototype.SafeTextInput = class {
                 const new_id = orig_id.slice( 0, orig_id.lastIndexOf( "-" ) ) + "-" + ( parseInt( orig_id.slice( orig_id.lastIndexOf( "-" ) + 1 ), 10 ) + 1 );
                 const search_panel = $("#searchbox");
                 $( `#${orig_id}` ).remove();
-                $( `<input id="${ new_id }" type="text" value="${ new_id }" />` ).appendTo( search_panel );
+                $( `<input id="${ new_id }" class="" type="text" value="${ new_id }" />` ).appendTo( search_panel );
                 setTimeout( () => {
                     // do this to lose focus from the input so ios doesn't pop-up the built-in search box on subsequent finds
                     $( `#${ new_id }` ).remove();
@@ -51,8 +51,29 @@ UI.SafeTextInput = UI.prototype.SafeTextInput = class {
         ` );
         
         this._dom.appendTo( this._parent );
+        this._editor = ace.edit( `${ parameters.id }-editor` );
+        this._editor.setOptions( {
+            hScrollBarAlwaysVisible: false,
+            vScrollBarAlwaysVisible: false,
+            highlightGutterLine: false,
+            animatedScroll: false,
+            showInvisibles: false,
+            showPrintMargin:false,
+            showFoldWidgets: false,
+            showLineNumbers: false,
+            showGutter: false,
+            displayIndentGuides: false,
+            maxLines: 1,
+            minLines:1,
+            scrollPastEnd: false,
+            mode: "ace/mode/plain_text"
+        } );
+        this._session = this._editor.getSession();
+        this._document = this._session.getDocument();
         
-        this.editor = ace.edit( `${ parameters.id }-editor` );
+        this._dom.on( "keypress", ( e ) => {
+            this._document.replace( this._editor.selection.getRange(), e.key );
+        } );
     }
     
     get id() {
@@ -78,6 +99,7 @@ UI.SafeTextInput = UI.prototype.SafeTextInput = class {
         this._attached = true;
         $( this._inputBox() ).appendTo( `#${ this.parameters.id }` );
         this._ide.events.keyboard.target = this.parameters.id;
+        this._editor.renderer.showCursor();
     }
     
     focus() {
@@ -87,6 +109,8 @@ UI.SafeTextInput = UI.prototype.SafeTextInput = class {
             this._attachInputBox();
         }, 1 );
     }
+    
+    
     
 
 };
