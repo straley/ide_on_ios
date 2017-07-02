@@ -116,6 +116,7 @@ class Events {
         
         const syncMomentum = () => {
             $momentum.height( _renderer.layerConfig.maxHeight );
+            // $momentum.width( _renderer.layerConfig.width );
             if ( _session.getScrollTop() !== -$momentum.position().top ) {
                 _session.setScrollTop( -$momentum.position().top );
             }

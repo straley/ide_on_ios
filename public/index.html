@@ -2,33 +2,39 @@
 <html lang="en">
     <head>
         <title>IDE on iOS</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"> 
-        <link rel="stylesheet" href="ide-on-ios.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no"/>
+        <link rel="stylesheet" href="/lib/external/ui.fancytree.css">
+        <link rel="stylesheet" href="css/ide-on-ios.css">
     </head>
     <body>
         <div id="content">
+            <div id="dock-left"></div>
+            <div class="splitter"></div>            
             <div id="editor-container">
                 <div id="keycapture">
-                    <div id="momentum"></div></div>
+                    <div id="momentum"></div>
                 </div>
                 <div id="editor"></div>
             </div>
-            <div id="sidebar"></div>
             <div id="dock-bottom"></div>
         </div>
         <div id="spacer"></div>
 
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.7/ace.js" type="text/javascript" charset="utf-8"></script>
-        <script src="https://code.jquery.com/jquery-3.2.1.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=" crossorigin="anonymous"></script>
+        <script src="lib/external/ace/ace.js" type="text/javascript" charset="utf-8"></script>
+        <script src="lib/external/ace/ext-modelist.js" type="text/javascript" charset="utf-8"></script>
+        <script src="lib/external/jquery-3.2.1.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=" crossorigin="anonymous"></script>
+        <script src="lib/external/jquery-resizable.js" type="text/javascript" charset="utf-8"></script>    
+        <script src="lib/external/jquery.fancytree-all-deps.min.js" type="text/javascript" charset="utf-8"></script>    
 
-        <script src="key-mapping.js" type="text/javascript" charset="utf-8"></script>    
-        <script src="key-actions.js" type="text/javascript" charset="utf-8"></script>    
-        <script src="events.js" type="text/javascript" charset="utf-8"></script>    
-        <script src="Panel.js" type="text/javascript" charset="utf-8"></script>    
-        <script src="PanelManager.js" type="text/javascript" charset="utf-8"></script>    
-        <script src="UI.js" type="text/javascript" charset="utf-8"></script>    
+        <script src="js/KeyMappings.js" type="text/javascript" charset="utf-8"></script>    
+        <script src="js/KeyActions.js" type="text/javascript" charset="utf-8"></script>    
+        <script src="js/Events.js" type="text/javascript" charset="utf-8"></script>    
+        <script src="js/Panel.js" type="text/javascript" charset="utf-8"></script>    
+        <script src="js/PanelManager.js" type="text/javascript" charset="utf-8"></script>    
+        <script src="js/UI.js" type="text/javascript" charset="utf-8"></script>    
+        <script src="js/FileTree.js" type="text/javascript" charset="utf-8"></script>    
         
-        <script src="ide.js" type="text/javascript" charset="utf-8"></script>    
+        <script src="js/IDE.js" type="text/javascript" charset="utf-8"></script>    
         
     </body>
 </html>

@@ -21,28 +21,6 @@ UI.SafeTextInput = UI.prototype.SafeTextInput = class {
         
         this.parameters = parameters;
         
-        //todo: add input ephermeral field and overlay with visibile div
-        //see:
-        /*
-                const orig_id  = $( "#searchbox" ).children().first().attr( "id" );
-                const new_id = orig_id.slice( 0, orig_id.lastIndexOf( "-" ) ) + "-" + ( parseInt( orig_id.slice( orig_id.lastIndexOf( "-" ) + 1 ), 10 ) + 1 );
-                const search_panel = $("#searchbox");
-                $( `#${orig_id}` ).remove();
-                $( `<input id="${ new_id }" class="" type="text" value="${ new_id }" />` ).appendTo( search_panel );
-                setTimeout( () => {
-                    // do this to lose focus from the input so ios doesn't pop-up the built-in search box on subsequent finds
-                    $( `#${ new_id }` ).remove();
-                    $( `<input id="${ new_id }" type="text" value="${ new_id }" />` ).appendTo( search_panel );
-                    
-                }, 10 );
-
-                $( `#${ new_id }` ).focus();
-                $( "#editor-container" ).css( { height: `calc( 100% - ${ 300 }px )` }) ;
-                $( "#editor" ).css( { height: `calc( 100% - ${ 300 }px )` }) ;
-                this.ide.editor.resize( true );
-                this.ide.events.newKey();
-        */
-        
         this._dom = $( `
             <div id="${ parameters.id }" class="safetext">
                 <div id="${ parameters.id }-editor" class="safetext"></div>
@@ -107,7 +85,7 @@ UI.SafeTextInput = UI.prototype.SafeTextInput = class {
         setTimeout( ()=>{
             this._detatchInputBox();
             this._attachInputBox();
-        }, 1 );
+        } );
     }
     
     

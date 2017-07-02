@@ -29,6 +29,42 @@ app.get( "/api/load/:filename*", function( req, res ) {
   }
 });
 
+app.get( "/api/ls/:path*?", function( req, res ) {
+  const relpath = `${ req.params.path || "" }${ req.param( 0 ) || "" }`.replace( /\/\.\.\//g, "/" );
+  const fullpath = `${ config.path }/${ relpath }`;
+  console.log( fullpath );
+  
+  let files = [];
+  try {
+    files = fs.readdirSync( fullpath );
+  } catch ( e ) {
+    res.send( "ERROR" );
+  }
+  // { title: "Folder 2", key: "2", folder: true, lazy: true }
+  const results = [];
+  
+  files.forEach( ( filename ) => {
+    try {
+      const stat = fs.lstatSync( `${ fullpath }/${ filename }` );
+      
+      // todo: handle other forms
+      if ( stat.isDirectory() || stat.isFile() ) {
+        results.push( {
+           title: filename,
+           key: `${ relpath ? `${ relpath }/` : "" }${ filename }`,
+           folder: stat.isDirectory(),
+           lazy: stat.isDirectory()
+        } );
+      }
+    } catch ( e ) {
+      // todo: error?
+    }
+  });
+  
+  res.send( JSON.stringify( results ) );
+});
+
+
 /* serves main page */
 app.get("/", function(req, res) {
   res.sendfile('./public/index.html')
