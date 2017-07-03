@@ -7,10 +7,32 @@
         <link rel="stylesheet" href="css/ide-on-ios.css">
     </head>
     <body>
+        <div id="login-modal"></div>
+        <div id="login-form">
+            <h1>IDE Login</h1>
+            <div id="login-error"></div>
+                <form id="login-form-form" method="post" action="login">
+                    <ul>
+                        <li>
+                            <label for="login-user">username:</label>
+                            <input type="text" size="30" id="login-user" name="login-user"/>
+                        </li>
+                        <li>
+                            <label for="login-pass">password:</label>
+                            <input type="password" size="30" id="login-pass" name="login-pass"/>
+                        </li>
+                        <li>
+                            <input type="submit" id="login-button" value=">>>">
+                        </li>
+                    </ul>
+                </form>
+            </div>
+        </div>
         <div id="content">
             <div id="dock-left"></div>
-            <div class="splitter"></div>            
+            <div class="splitter"></div>
             <div id="editor-container">
+                <div id="tabs"></div>
                 <div id="keycapture">
                     <div id="momentum"></div>
                 </div>
@@ -33,6 +55,7 @@
         <script src="js/PanelManager.js" type="text/javascript" charset="utf-8"></script>    
         <script src="js/UI.js" type="text/javascript" charset="utf-8"></script>    
         <script src="js/FileTree.js" type="text/javascript" charset="utf-8"></script>    
+        <script src="js/Comm.js" type="text/javascript" charset="utf-8"></script>    
         
         <script src="js/IDE.js" type="text/javascript" charset="utf-8"></script>    
         

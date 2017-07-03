@@ -4,15 +4,28 @@ class Events {
     constructor( ide, id ) {
         this.ide = ide;
         this.keyboard = { newKey: true, key: null, action: null, repeatDelay: null, repeatInterval: null, aux: null, target: null };
+        if ( id ) {
+            this.setTarget( id );
+        }
+        this.isSelectingWithMouse = false;
+        this._stopMomentumMonitor = false;
+    }
+    
+    start() {
         $( window ).keyup( this.newKey.bind( this ) );        
         $( window ).keydown( this.keyDown.bind( this ) );
         $( "#keycapture" ).click( this.clickCapture.bind( this ) );
         $( "#keycapture" ).mousemove( this.mousemoveCapture.bind( this ) );
+        this._stopMomentumMonitor = false;
         this.startMomentumMonitor();
-        this.isSelectingWithMouse = false;
-        if ( id ) {
-            this.setTarget( id );
-        }
+    }
+    
+    stop() {
+        $( window ).unbind("keyup");
+        $( window ).unbind("keydown");
+        $( "#keycapture" ).unbind("click");
+        $( "#keycapture" ).unbind("mousemove");
+        this.stopMomentumMonitor();
     }
     
     setTarget( target_id ) {
@@ -108,6 +121,10 @@ class Events {
             this.isSelectingWithMouse = false;
         }
     } 
+    
+    stopMomentumMonitor() {
+        this._stopMomentumMonitor = true;
+    }
 
     startMomentumMonitor() {
         const $momentum = $( "#momentum" );
@@ -120,7 +137,9 @@ class Events {
             if ( _session.getScrollTop() !== -$momentum.position().top ) {
                 _session.setScrollTop( -$momentum.position().top );
             }
-            window.requestAnimationFrame( syncMomentum );
+            if ( !this._stopMomentumMonitor ) {
+                window.requestAnimationFrame( syncMomentum );
+            }
         };
         syncMomentum();
     }

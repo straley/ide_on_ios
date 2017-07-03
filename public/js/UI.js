@@ -4,7 +4,7 @@ class UI {}
 
 UI.unique = UI.prototype.unique = () => {
     return Math.floor( ( ( Math.floor( Date.now() / 1000 ) + ( ( performance.now() / 1000) % 1 ) * 1000000 ) + Math.random() ) * 1000 ).toString(36);
-}
+};
 
 UI.SafeTextInput = UI.prototype.SafeTextInput = class {
     constructor( ide, parent, parameters ) {

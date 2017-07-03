@@ -1,4 +1,4 @@
-/* globals $ */
+/* globals $, Comm */
 
 class FileTree {
     constructor( ide, target, path="" ) {
@@ -6,13 +6,15 @@ class FileTree {
         this.target = target;
         this.path = path;
         
-        $.getJSON( `/api/ls/${ path }`, {}, ( source ) => {
+        this.ide.comm.ls( path, ( source ) => { 
             $( `#${ target }` ).fancytree( {
-                source,
+                source: source.files,
                 lazyLoad: ( event, data ) => {
-                    data.result = {
-                        url: `/api/ls/${ data.node.key }`
-                    };
+                    const deferred = new $.Deferred();
+                    data.result = deferred.promise();
+                    this.ide.comm.ls( data.node.key, ( response ) => {
+                        deferred.resolve( response.files );    
+                    } );
                 },
                 clickFolderMode: 3,
                 click: (event, data) => {
@@ -22,7 +24,7 @@ class FileTree {
                         }
                     }
                 }
-            });
-        });
+            } );
+        } ); 
     }
 }
