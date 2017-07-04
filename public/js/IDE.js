@@ -1,9 +1,10 @@
-/* globals $, ace, Events, KeyMappings, KeyActions, PanelManager, FileTree, Comm */
+/* globals $, ace, Events, KeyMappings, KeyActions, PanelManager, FileTree, Tabs, Comm */
 
 class IDE {
     constructor( id ) {
         this.id = id; 
         this.comm = new Comm();
+        this.files = {};
         
         $( "#dock-left" ).resizable( {
             handleSelector: ".splitter",
@@ -41,12 +42,12 @@ class IDE {
         this.keyMappings = new KeyMappings( this );
         this.undoManager = this.session.getUndoManager();
         this.panelManager = new PanelManager( this );
+        this.tabs = new Tabs( "tabs" );
         
         this.renderer.showCursor();
         this.editor.setAutoScrollEditorIntoView( true );
         
         this.filetree = new FileTree( this, "dock-left" );
-        
         
         // some default settings for now, move these to a config
         this.editor.$blockScrolling = Infinity;
@@ -56,26 +57,32 @@ class IDE {
             $( `<input id="search-input-1" type="text" />` ).appendTo( dom );
         } );
         
+        // add tab for empty file
+        this.tabs.add().activate();
+        this.events.start();
     }
 
     
     load( filename ) {
         $.getJSON( `/api/load/${ filename }`, {}, ( response ) => {
-            this.session.setMode( this.modelist.getModeForPath( filename ).mode );
+            this.tabs.add( {
+                title: filename,
+                filename: filename,
+                saved: response.contents,
+                current: response.contents,
+                onActivate: ( tab ) => {
+                    this.editor.setValue( tab.settings.current );
+                    this.session.setMode( this.modelist.getModeForPath( tab.settings.filename ).mode );    
+                    this.selection.clearSelection();
+                    this.selection.moveCursorFileStart();
+                    //hack -- todo: save undo states 
+                    setTimeout( ()=>{
+                        this.undoManager.reset();
+                    }, 700 );
+                }
+            } ).activate();
 
-            this.editor.setValue( response.contents );
-            this.selection.clearSelection();
-            this.selection.moveCursorFileStart();
-
-            //hack
-            setTimeout( ()=>{
-                this.undoManager.reset();
-            }, 700 );
         } );
     } 
 }
-
-$(document).ready(()=>{
-    const ide = new IDE( "editor" );
-});
 
