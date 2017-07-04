@@ -53,8 +53,13 @@ class IDE {
         this.editor.$blockScrolling = Infinity;
         this.editor.setTheme( "ace/theme/monokai");
         
-        this.searchbox = this.panelManager.add( "searchbox", ( dom ) => {
-            $( `<input id="search-input-1" type="text" />` ).appendTo( dom );
+        this.searchbox = this.panelManager.add( "searchbox", "search-panel", ( $dom ) => {
+            $( `<input id="search-input-1" type="text" />` ).appendTo( $dom );
+        } );
+        
+        this.console = this.panelManager.add( "console", "console-panel", ( $dom ) => { 
+            $( "#console-panel" ).height( 200 );
+            $( `<div class="output"><p>Hello?</p></div>` ).appendTo( $dom );
         } );
         
         // add tab for empty file
@@ -74,11 +79,26 @@ class IDE {
                     this.editor.setValue( tab.settings.current );
                     this.session.setMode( this.modelist.getModeForPath( tab.settings.filename ).mode );    
                     this.selection.clearSelection();
-                    this.selection.moveCursorFileStart();
+                    if ( tab.position ) {
+                        this.editor.moveCursorToPosition( tab.position.cursor );
+                    } else {
+                        this.selection.moveCursorFileStart();
+                    }
                     //hack -- todo: save undo states 
                     setTimeout( ()=>{
                         this.undoManager.reset();
+                        if ( tab.position ) {
+                            this.session.setScrollTop( tab.position.scrollTop );
+                            this.session.setScrollLeft( tab.position.scrollLeft );
+                        }
                     }, 700 );
+                },
+                onDeactivate: ( tab ) => {
+                    tab.position = {
+                        scrollTop: this.session.getScrollTop(),
+                        scrollLeft: this.session.getScrollLeft(),
+                        cursor: this.editor.getCursorPosition()
+                    }
                 }
             } ).activate();
 

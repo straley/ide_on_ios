@@ -1,5 +1,7 @@
 /* globals $ */
 
+// inspired by https://codepen.io/ademilter/pen/wfAer
+
 class Tabs {
     constructor( target ) {
         this.$target = 
@@ -8,6 +10,7 @@ class Tabs {
             target;
         this.tabs = [];
         this._nextId = 1;
+        this.activeTab = false;
     }
     
     nextId() {
@@ -35,9 +38,13 @@ class Tabs {
             const $tab = $( `#tab-${ tab.id }` );
             if ( tab.id === id ) {
                 $tab.addClass( "active" );
+                this.activeTab = tab;
                 tab.onActivate( tab );
             } else {
-                $tab.removeClass( "active" );
+                if ( $tab.hasClass( "active" ) ) {
+                    $tab.removeClass( "active" );
+                    tab.onDeactivate( tab );
+                }
             }
         } );
         
@@ -68,11 +75,13 @@ class Tab {
         this.className = settings.className;
         
         this.onActivate = settings.onActivate ? settings.onActivate : () => {};
+        this.onDeactivate = settings.onDeactivate ? settings.onDeactivate: () => {};
         
         this.$dom = $( `<div id="tab-${ this.id }" class="tab${ this.className ? ` ${ this.className }` : "" }"><span>${ this.title }</span><a href="#">×</a></div>` ); //
     }
     
     activate() {
+        
         this.tabs.activate( this.id );
     }
     

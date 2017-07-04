@@ -149,7 +149,7 @@ class KeyActions {
             "FIND": () => {
                 // hacking it here... 
                 
-                $( "#dock-bottom" ).height( 40 );
+                $( "#search-panel" ).height( 40 );
                 
                 // todo: this should all be handled by panel, so we're not always recreating this
                 const $search_panel = $("#searchbox");

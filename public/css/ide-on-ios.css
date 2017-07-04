@@ -312,7 +312,7 @@ body {
                 opacity: 1;
             }
             
-    #dock-bottom {
+    #search-panel {
         position: absolute;
         right: 0;
         bottom: 0;
@@ -324,6 +324,18 @@ body {
         -webkit-overflow-scrolling: touch;
     }
     
+    #console-panel {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        height: 0;
+        z-index: 10;
+        background-color: #333;
+        color: #fff;
+        overflow-x: scroll;
+        -webkit-overflow-scrolling: touch;
+    }
 
         
 
